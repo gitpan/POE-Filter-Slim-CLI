@@ -1,7 +1,7 @@
 package POE::Filter::Slim::CLI;
 
 #
-# $Id: CLI.pm 25 2007-09-06 19:43:24Z andy $
+# $Id: CLI.pm 26 2007-09-07 04:32:54Z andy $
 #
 # Filter lines according to SlimServer's CLI spec:
 # Any combination of CR, LF, and \0 is accepted, and
@@ -13,6 +13,7 @@ use strict;
 use base 'POE::Filter::Line';
 
 use Carp qw(carp croak);
+use Clone qw(clone);
 use URI::Escape qw(uri_escape);
 
 sub DEBUG () { 0 }
@@ -25,7 +26,7 @@ if ( DEBUG ) {
     require Data::Dump;
 }
 
-our $VERSION = '0.01';
+our $VERSION = '0.02';
 
 sub new {
     my $type = shift;
@@ -64,6 +65,8 @@ sub get_one {
 
 sub put {
     my ( $self, $lines ) = @_;
+    
+    $lines = clone($lines);
     
     my @raw;
     foreach my $line ( @{$lines} ) {
